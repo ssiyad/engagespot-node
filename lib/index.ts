@@ -1,10 +1,10 @@
 import { createHmac } from 'crypto';
-import axios, { AxiosError, AxiosRequestHeaders, Method } from "axios";
+import axios, { AxiosError, AxiosRequestHeaders, Method } from 'axios';
 
 class InsufficientRecipients extends Error {
     constructor() {
         super();
-        this.message = 'Insufficient number of recipients configured'
+        this.message = 'Insufficient number of recipients configured';
         this.name = 'InsufficientRecipientsError';
     }
 }
@@ -12,7 +12,8 @@ class InsufficientRecipients extends Error {
 class AuthFail extends Error {
     constructor() {
         super();
-        this.message = "Authentication failed. Make sure you're using the right API Credentials. Please read our docs at https://documentation.engagespot.co";
+        this.message =
+            "Authentication failed. Make sure you're using the right API Credentials. Please read our docs at https://documentation.engagespot.co";
         this.name = 'AuthFail';
     }
 }
@@ -31,7 +32,7 @@ interface NotificationSchema {
     category?: string;
     override?: {
         channels?: string[];
-    }
+    };
 }
 
 /**
@@ -39,7 +40,7 @@ interface NotificationSchema {
  */
 class Notification {
     /**
-     * 
+     *
      * @param client Engagespot client
      * @param title notification title
      */
@@ -100,12 +101,14 @@ class Notification {
      * @returns notification object itself
      */
     addRecipient(recipient: string) {
-        this.body.recipients = Array.from(new Set(this.body.recipients).add(recipient));
+        this.body.recipients = Array.from(
+            new Set(this.body.recipients).add(recipient),
+        );
         return this;
     }
 
     private haveEnoughRecipients() {
-        return this.body.recipients.length > 0
+        return this.body.recipients.length > 0;
     }
 
     /**
@@ -117,7 +120,7 @@ class Notification {
             throw new InsufficientRecipients();
         }
 
-        return this.client.sendNotification(this.body)
+        return this.client.sendNotification(this.body);
     }
 }
 
@@ -129,7 +132,7 @@ export class Engagespot {
     private HEADERS: AxiosRequestHeaders;
 
     /**
-     * 
+     *
      * @param apiKey API_KEY from Engagespot
      * @param apiSecret API_SECRET from Engagespot
      */
@@ -145,32 +148,36 @@ export class Engagespot {
     }
 
     /**
-     * 
+     *
      * @param url part of url/service. eg: 'notifications' for https://api.engagespot.co/v3/notifications
      * @param data data required to call the API
      * @param headers usually contains auth information along with supplementary data
      * @param method http method like 'GET' and 'POST'
      * @returns API response
      */
-    private call(url: string, data: any, headers: AxiosRequestHeaders = this.HEADERS, method: Method = 'POST') {
+    private call(
+        url: string,
+        data: any,
+        headers: AxiosRequestHeaders = this.HEADERS,
+        method: Method = 'POST',
+    ) {
         return axios({
             url: this.ENDPOINT + url,
             data,
             method,
             headers,
-        })
-            .catch((err: AxiosError) => {
-                switch (err.response?.status) {
-                    case 401:
-                        throw new AuthFail();
-                    default:
-                        throw err;
-                }
-            });
+        }).catch((err: AxiosError) => {
+            switch (err.response?.status) {
+                case 401:
+                    throw new AuthFail();
+                default:
+                    throw err;
+            }
+        });
     }
 
     /**
-     * 
+     *
      * @param title
      * @returns notification instance
      */
