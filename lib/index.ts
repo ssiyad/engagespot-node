@@ -169,9 +169,14 @@ export class Engagespot {
             });
     }
 
+    /**
+     * 
+     * @param title
+     * @returns notification instance
+     */
     // https://documentation.engagespot.co/docs/rest-api/#tag/Notifications/paths/~1v3~1notifications/post
-    createNotification(t: string) {
-        return new Notification(this, t);
+    createNotification(title: string) {
+        return new Notification(this, title);
     }
 
     /**
