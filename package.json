@@ -1,0 +1,29 @@
+{
+    "name": "engagespot-node",
+    "version": "0.0.1",
+    "description": "node sdk for https://engagespot.co/",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "prepublish": "npm run build",
+        "build": "tsc",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ssiyad/engagespot-node.git"
+    },
+    "author": "",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/ssiyad/engagespot-node/issues"
+    },
+    "homepage": "https://github.com/ssiyad/engagespot-node#readme",
+    "dependencies": {
+        "axios": "^0.26.0"
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.21",
+        "typescript": "^4.6.2"
+    }
+}
