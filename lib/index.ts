@@ -1,7 +1,7 @@
 import { createHmac } from 'crypto';
 import axios, { AxiosError, AxiosRequestHeaders, Method } from 'axios';
 
-class InsufficientRecipients extends Error {
+export class InsufficientRecipients extends Error {
     constructor() {
         super();
         this.message = 'Insufficient number of recipients configured';
@@ -9,7 +9,7 @@ class InsufficientRecipients extends Error {
     }
 }
 
-class AuthFail extends Error {
+export class AuthFail extends Error {
     constructor() {
         super();
         this.message =
@@ -21,7 +21,7 @@ class AuthFail extends Error {
 /**
  * https://documentation.engagespot.co/docs/rest-api/#tag/Notifications/paths/~1v3~1notifications/post
  */
-interface NotificationSchema {
+export interface NotificationSchema {
     notification: {
         title: string;
         message?: string;
@@ -38,7 +38,7 @@ interface NotificationSchema {
 /**
  * basic unit, use setters to streamline data preparation
  */
-class Notification {
+export class Notification {
     /**
      *
      * @param client Engagespot client
