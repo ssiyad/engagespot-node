@@ -57,7 +57,13 @@ export class Engagespot {
         });
     }
 
-    extendHeaders(
+    /**
+     * merge two sets of headers and return result
+     * @param headers to be appended
+     * @param current set of headers
+     * @returns merge result
+     */
+    private extendHeaders(
         headers: AxiosRequestHeaders,
         current: AxiosRequestHeaders = this.HEADERS,
     ): AxiosRequestHeaders {
