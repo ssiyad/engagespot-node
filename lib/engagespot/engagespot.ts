@@ -3,22 +3,25 @@ import { createHmac } from 'crypto';
 import { AuthFail } from './errors/auth-fail.error';
 import { NotificationSchema } from './types/notification-schema.interface';
 import { Notification } from './notification';
+import { EngagespotConfig } from './types/config.interface';
+import { DEVICE_TYPE, ENDPOINT } from './const';
 
 /**
  * entry point
  */
 export class Engagespot {
-    private ENDPOINT: string = 'https://api.engagespot.co/v3/';
+    private ENDPOINT: string = ENDPOINT;
     private HEADERS: AxiosRequestHeaders;
 
     /**
      * @param apiKey API_KEY from Engagespot
      * @param apiSecret API_SECRET from Engagespot
      */
-    constructor(private apiKey: string, private apiSecret: string) {
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-
+    constructor(
+        private apiKey: string,
+        private apiSecret: string,
+        private config?: EngagespotConfig,
+    ) {
         // https://documentation.engagespot.co/docs/rest-api/#section/Authentication
         this.HEADERS = {
             'X-ENGAGESPOT-API-KEY': this.apiKey,
@@ -54,7 +57,18 @@ export class Engagespot {
         });
     }
 
+    extendHeaders(
+        headers: AxiosRequestHeaders,
+        current: AxiosRequestHeaders = this.HEADERS,
+    ): AxiosRequestHeaders {
+        return {
+            ...current,
+            ...headers,
+        };
+    }
+
     /**
+     * create a notification instance which can be sent using .send()
      * @param title
      * @returns notification instance
      */
@@ -68,9 +82,40 @@ export class Engagespot {
      * @param notification body
      * @returns API response
      */
-    // https://documentation.engagespot.co/docs/rest-api/#tag/Notifications/paths/~1v3~1notifications/post
     sendNotification(notification: NotificationSchema) {
+        // https://documentation.engagespot.co/docs/rest-api/#tag/Notifications/paths/~1v3~1notifications/post
         return this.call('notifications', notification);
+    }
+
+    /**
+     * connect/register a user with Engagespot
+     * @param userId like 'hello@example.com'
+     * @returns API response
+     */
+    connect(userId: string) {
+        let headers = this.extendHeaders({
+            'X-ENGAGESPOT-USER-ID': userId,
+            'X-ENGAGESPOT-DEVICE-ID': DEVICE_TYPE,
+        });
+
+        // append user signature if hmac is enabled
+        if (this.config?.enableHmac) {
+            headers = this.extendHeaders(
+                {
+                    'X-ENGAGESPOT-USER-SIGNATURE': this.genHmac(userId),
+                },
+                headers,
+            );
+        }
+
+        // https://documentation.engagespot.co/docs/rest-api#tag/SDK/paths/~1v3~1sdk~1connect/post
+        return this.call(
+            'sdk/connect',
+            {
+                deviceType: DEVICE_TYPE,
+            },
+            headers,
+        );
     }
 
     /**
