@@ -20,7 +20,7 @@
     },
     "homepage": "https://github.com/ssiyad/engagespot-node#readme",
     "dependencies": {
-        "axios": "^0.26.0"
+        "axios": "^1.6.0"
     },
     "devDependencies": {
         "@types/node": "^17.0.21",
